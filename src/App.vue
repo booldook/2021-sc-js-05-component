@@ -1,7 +1,10 @@
 <template>
 	<div>
-		<router-link></router-link>
-		<router-view></router-view>
+		<div>
+			<router-link to="/">Weather</router-link> | 
+			<router-link to="/shop">Shop</router-link>
+		</div>
+		<router-view />
 	</div>
 </template>
 
