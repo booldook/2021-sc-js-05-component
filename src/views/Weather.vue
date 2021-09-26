@@ -8,6 +8,9 @@
 			<div class="temp-wrap">{{ temp }} ℃</div>
 			<div class="desc-wrap">{{ main }} / {{ desc }} </div>
 		</div>
+		<div class="comment-wrapper" v-show="daily ? false : true">
+			날씨정보를 보시려면 위치정보를 켜주세요.
+		</div>
 	</div>
 </template>
 
@@ -95,5 +98,13 @@ export default {
 	.city-wrap {font-size: 2em;}
 	.temp-wrap {font-size: 2.5em; padding: .25em 0;}
 	.desc-wrap {font-size: 1.5em;}
+}
+.comment-wrapper {
+	font-size: 1.5em;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 </style>
