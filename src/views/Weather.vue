@@ -1,6 +1,13 @@
 <template>
 	<div>
-		
+		<div class="daily-wrapper" v-show="daily ? true : false">
+			<div class="city-wrap">{{ city }}, {{ country }}</div>
+			<div class="icon-wrap">
+				<img v-bind:src="icon" alt="아이콘">
+			</div>
+			<div class="temp-wrap">{{ temp }} ℃</div>
+			<div class="desc-wrap">{{ main }} / {{ desc }} </div>
+		</div>
 	</div>
 </template>
 
@@ -25,7 +32,7 @@
 
 const appid = '02efdd64bdc14b279bc91d9247db4722';
 const dailyURL = 'https://api.openweathermap.org/data/2.5/weather';
-const icon = ['http://openweathermap.org/img/wn/', '@2x.png'];
+const icons = ['http://openweathermap.org/img/wn/', '@2x.png'];
 const units = 'metric';
 
 import axios from 'axios';
@@ -38,28 +45,55 @@ export default {
 		return {
 			lat: '',
 			lon: '',
-			icon: '',
-			weather: null
+			daily: null
 		}
 	},
 	created() {
-		navigator.geolocation.getCurrentPosition(geo => {
+		navigator.geolocation.getCurrentPosition(async geo => {
 			let { latitude: lat, longitude: lon } = geo.coords;
 			this.lat = lat;
 			this.lon = lon;
-			axios.get(dailyURL, { params: { appid, lat, lon, units } }).then(r => {
-				console.log(r)
-			})
+			let { data } = await axios.get(dailyURL, { params: { appid, lat, lon, units } });
+			this.daily = data;
+			console.log(this.daily)
 		}, err => {
 			console.log(err)
 		})
 	},
-	computed: {},
+	computed: {
+		icon: function() {
+			return this.daily ? icons[0] + this.daily.weather[0].icon + icons[1] : '';
+		},
+		city: function() {
+			return this.daily ? this.daily.name : '';
+		},
+		country: function() {
+			return this.daily ? this.daily.sys.country : '';
+		},
+		temp: function() {
+			return this.daily ? this.daily.main.temp : '';
+		},
+		main: function() {
+			return this.daily ? this.daily.weather[0].main : '';
+		},
+		desc: function() {
+			return this.daily ? this.daily.weather[0].description : '';
+		}
+	},
 	watch: {},
 	methods: {}
 }
 </script>
 
-<style>
-
+<style lang="scss">
+.daily-wrapper {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	.city-wrap {font-size: 2em;}
+	.temp-wrap {font-size: 2.5em; padding: .25em 0;}
+	.desc-wrap {font-size: 1.5em;}
+}
 </style>
