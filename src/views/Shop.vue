@@ -2,14 +2,14 @@
 	<div>
 		<div class="container">
 			<div class="input-wp my-5">
-				<input type="text" class="form-control form-control-lg search">
-				<i class="fa fa-times-circle bt-remove"></i>
+				<input type="text" class="form-control form-control-lg search" v-model="search" autofocus v-on:keyup="onKeyup">
+				<i class="fa fa-times-circle bt-remove" v-show="search.length" v-on:click="resetInput"></i>
 			</div>
 			<ul class="prd-wrap">
-				<li class="prd">
-					<img class="w-100 img">
-					<div class="title"></div>
-					<div class="price"></div>
+				<li class="prd" v-for="v in searchPrds" v-bind:key="v.id">
+					<img class="w-100 img" v-bind:src="v.src">
+					<div class="title">{{ v.title }}</div>
+					<div class="price">${{ v.price }}</div>
 				</li>
 			</ul>
 		</div>
@@ -17,8 +17,34 @@
 </template>
 
 <script>
-export default {
+// modern javascript: ES6/Node/Express/React/Vue ...
+import axios from 'axios';
 
+export default {
+	name: 'Shop',
+	data() {
+		return {
+			prds: [],
+			searchPrds: [],
+			search: ''
+		}
+	},
+	async created() {
+		let { data } = await axios.get('/json/products.json')
+		this.prds = data.prds;
+		this.searchPrds = data.prds;
+	},
+	methods: {
+		resetInput(e) {
+			this.search = '';
+			this.searchPrds = this.prds;
+		},
+		onKeyup(e) {
+			this.searchPrds = this.prds.filter((v) => {
+				return v.title.toLowerCase().includes(this.search.toLowerCase()) || v.price.includes(this.search)
+			})
+		}
+	}
 }
 </script>
 
