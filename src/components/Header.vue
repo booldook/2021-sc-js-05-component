@@ -1,7 +1,7 @@
 <template>
 	<div class="header-wrapper">
 		<div class="logo">
-			<i class="fa fa-bars"></i> Weather
+			<router-link to="/"><i class="fa fa-bars"></i> Weather</router-link>
 		</div>
 		<ul class="navi-wrap">
 			<li><router-link to="/">Weather</router-link></li>
@@ -24,6 +24,7 @@ export default {
 	justify-content: space-between;
 	.logo {
 		padding: 1em;
+		font-weight: bold;
 	}
 	.navi-wrap {
 		display: flex;
